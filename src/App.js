@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from './api';
-import { Grid, Link, Typography, IconButton, Card, CardContent, Paper, AppBar, Toolbar, TextField, Switch } from '@material-ui/core';
+import { Grid, Link, Typography, IconButton, Card, CardContent, Paper, AppBar, Toolbar, TextField, Switch, Tabs, Tab } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import cx from 'classnames';
 import TodayIcon from '@material-ui/icons/Today';
@@ -8,6 +8,9 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { makeStyles } from '@material-ui/styles';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+import DescriptionIcon from '@material-ui/icons/Description';
+import GroupIcon from '@material-ui/icons/Group';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 
@@ -25,7 +28,7 @@ function App() {
   const [html_url, setHtml_url] = useState("");
   const [error, setError] = useState("");
   const [darkMode, setDartmode] = useState(false);
-
+  const [value, setValue] = useState(0);
 
   // useEffect(() => {
   //   axiosInstance.get(`/users/examples`)
@@ -66,11 +69,18 @@ function App() {
     e.preventDefault();
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const useStyles = makeStyles((theme) => ({
     TypographyStyles: {
       flex: 1,
     },
-
+    size: {
+      minWidth: 495,
+      marginTop: 15,
+    }
   }));
 
   const theme = createMuiTheme({
@@ -82,7 +92,7 @@ function App() {
   const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
-      <Paper style={{ height: "100vh" }}>
+      <Paper>
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="h5" className={cx(classes.TypographyStyles)}>
@@ -102,56 +112,73 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        <Grid container spacing={1} direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justify="center" alignItems="center">
           <Grid item xs={8}>
             <div>
-              <Avatar alt="profile" src={avatar_url} />
+              <Avatar alt="profile" src={avatar_url} style={{ marginTop: '5' }} />
             </div>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="h4" color="Secondary">{name}</Typography>
+            <Typography variant="h4" color="Secondary">{name}ganesh</Typography>
           </Grid>
           <Grid item xs={8}>
             <Typography variant="h5">
-              <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}</Link>
+              <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}ganesh1172</Link>
             </Typography>
           </Grid>
           <Grid container direction="row" justify="center" alignItems="center">
             <Grid item sm={3}></Grid>
             <Grid item sm={2}>
-              <Typography align="center"><IconButton><BusinessCenterIcon color="action" /></IconButton>{company}</Typography>
+              <Typography align="center"><IconButton><BusinessCenterIcon color="action" /></IconButton>ganesh{company}</Typography>
             </Grid>
             <Grid item sm={2}>
-              <Typography align="center"><IconButton><LocationOnIcon color="action" /></IconButton>{location}</Typography>
+              <Typography align="center"><IconButton><LocationOnIcon color="action" /></IconButton>navi mumbai{location}</Typography>
             </Grid>
             <Grid item sm={2}>
-              <Typography align="center"><IconButton><TodayIcon color="action" /></IconButton>{new Date(created_at).toDateString()}</Typography>
+              <Typography align="center"><IconButton><TodayIcon color="action" /></IconButton>8454866{new Date(created_at).toDateString()}</Typography>
             </Grid>
             <Grid item sm={3}></Grid>
           </Grid>
-          <Grid container direction="row" spacing={2} justify="center">
+          <Grid container direction="row" justify="center">
             <Grid item component={Card}>
               <CardContent>
-                <Typography variant="h5" align="center">{public_repos}</Typography>
+                <Typography variant="h5" align="center">8{public_repos}</Typography>
                 <Typography color="textSecondary">REPOSITORIES</Typography>
               </CardContent>
             </Grid>
             <Grid item component={Card}>
               <CardContent>
-                <Typography variant="h5" align="center">{followers}</Typography>
+                <Typography variant="h5" align="center">8{followers}</Typography>
                 <Typography color="textSecondary">FOLLOWERS</Typography>
               </CardContent>
             </Grid>
             <Grid item component={Card}>
               <CardContent>
-                <Typography variant="h5" align="center">{following}</Typography>
+                <Typography variant="h5" align="center">8{following}</Typography>
                 <Typography color="textSecondary">FOLLOWING</Typography>
               </CardContent>
             </Grid>
           </Grid>
+          <Grid container direction="row">
+            <Grid item sm={3} />
+            <Grid item sm={6}>
+              <Tabs className={classes.size}
+                value={value}
+                onChange={handleChange}
+                variant="fullWidth"
+                indicatorColor="secondary"
+                textColor="primary"
+              >
+                <Tab icon={<DescriptionIcon />} label="Repositories" />
+                <Tab icon={<GroupIcon />} label="Followers" />
+                <Tab icon={<GroupAddIcon />} label="following" />
+              </Tabs>
+            </Grid>
+            <Grid item sm={3} />
+          </Grid>
         </Grid >
       </Paper>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
 
