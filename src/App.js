@@ -29,6 +29,7 @@ function App() {
   const [error, setError] = useState("");
   const [darkMode, setDartmode] = useState(false);
   const [value, setValue] = useState(0);
+  const [repos, setRepos] = useState("");
 
   // useEffect(() => {
   //   axiosInstance.get(`/users/examples`)
@@ -38,7 +39,7 @@ function App() {
   //     })
   // }, []);
 
-  const setData = ({ name, login, public_repos, followers, following, avatar_url, location, created_at, company, html_url }) => {
+  const setData = ({ name, login, public_repos, followers, following, avatar_url, location, created_at, company, html_url, repos }) => {
     setName(name);
     setUserName(login);
     setPublicRepos(public_repos);
@@ -49,6 +50,7 @@ function App() {
     setCreated_at(created_at);
     setCompany(company);
     setHtml_url(html_url);
+    setRepos(repos);
   };
 
   const handleSearch = (e) => {
@@ -72,6 +74,36 @@ function App() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleRepos = (e) => {
+    axiosInstance.get(`/users/${userInput}/repos`)
+      .then(response => {
+        const data = response.data;
+        setData(data);
+        console.log(data);
+      })
+    e.preventDefault();
+  }
+
+  const handleFollowers = (e) => {
+    axiosInstance.get(`/users/${userInput}/followers`)
+      .then(response => {
+        const data = response.data;
+        setData(data);
+        // console.log(data);
+      })
+    e.preventDefault();
+  }
+
+  const handleFollowing = (e) => {
+    axiosInstance.get(`/users/${userInput}/following`)
+      .then(response => {
+        const data = response.data;
+        setData(data);
+        // console.log(data);
+      })
+    e.preventDefault();
+  }
 
   const useStyles = makeStyles((theme) => ({
     TypographyStyles: {
@@ -119,7 +151,7 @@ function App() {
             </div>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="h4" color="Secondary">{name}ganesh</Typography>
+            <Typography variant="h4" color="secondary">{name}ganesh</Typography>
           </Grid>
           <Grid item xs={8}>
             <Typography variant="h5">
@@ -169,9 +201,9 @@ function App() {
                 indicatorColor="secondary"
                 textColor="primary"
               >
-                <Tab icon={<DescriptionIcon />} label="Repositories" />
-                <Tab icon={<GroupIcon />} label="Followers" />
-                <Tab icon={<GroupAddIcon />} label="following" />
+                <Tab icon={<DescriptionIcon />} label="Repositories" onClick={handleRepos} />{repos}
+                <Tab icon={<GroupIcon />} label="Followers" onClick={handleFollowers} />
+                <Tab icon={<GroupAddIcon />} label="following" onClick={handleFollowing} />
               </Tabs>
             </Grid>
             <Grid item sm={3} />
