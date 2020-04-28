@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axiosInstance from './api';
-import { Card, CardContent, Typography, Grid, AppBar, Toolbar, TextField, Link, Paper, Switch } from '@material-ui/core';
+import { Grid, Link, Typography, IconButton, Card, CardContent, Paper, AppBar, Toolbar, TextField, Switch } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import cx from 'classnames';
 import TodayIcon from '@material-ui/icons/Today';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { makeStyles } from '@material-ui/styles';
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -66,9 +67,6 @@ function App() {
   };
 
   const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
     TypographyStyles: {
       flex: 1,
     },
@@ -88,7 +86,7 @@ function App() {
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="h5" className={cx(classes.TypographyStyles)}>
-              Material-UI
+              Git-Glimpse
           </Typography>
             <div>
               <form onSubmit={handleSubmit} autoComplete="off">
@@ -104,58 +102,56 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        {error ? (<div><h1>{error}</h1></div>) : (
-          <Grid container>
-            <Grid item lg={2} sm={2}></Grid>
-            {/* {!userName ? (<h3>Welcome
-            </h3>) : ( */}
-
-            <Grid container>
-              <Grid item sm={12} justify="center" alignItems="center">
-                <Avatar alt="profile" src={avatar_url} />
-              </Grid>
-              <Grid item sm={12} justify="center" alignItems="center">
-                <Typography variant="h3" align="center" color="textSecondary">{name}</Typography></Grid>
-              <Grid item sm={12} justify="center" alignItems="center">
-                <Typography variant="h5" align="center" color="textPrimary">
-                  <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}</Link></Typography></Grid>
-              <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center">
-
-                <Typography display="inline" align="left">{company}</Typography>
-                <LocationOnIcon color="disabled" /><Typography display="inline" align="center" >{location}</Typography>
-                <TodayIcon color="disabled" /><Typography align="right" display="inline">{new Date(created_at).toDateString()}</Typography>
-              </Grid>
-              <Grid container spacing={2} justify="center">
-                <Grid item component={Card}>
-                  <CardContent>
-                    <Typography variant="h5" align="center">{public_repos}</Typography>
-                    <Typography color="textSecondary">REPOSITORIES</Typography>
-                  </CardContent>
-                </Grid>
-                <Grid item component={Card}>
-                  <CardContent>
-                    <Typography variant="h5" align="center">{followers}</Typography>
-                    <Typography color="textSecondary">FOLLOWERS</Typography>
-                  </CardContent>
-                </Grid>
-                <Grid item component={Card}>
-                  <CardContent>
-                    <Typography variant="h5" align="center">{following}</Typography>
-                    <Typography color="textSecondary">FOLLOWING</Typography>
-                  </CardContent>
-                </Grid>
-              </Grid>
-            </Grid>
-        )}
+        <Grid container spacing={1} direction="column" justify="center" alignItems="center">
+          <Grid item xs={8}>
+            <div>
+              <Avatar alt="profile" src={avatar_url} />
+            </div>
           </Grid>
-        )
-        }
+          <Grid item xs={8}>
+            <Typography variant="h4" color="Secondary">{name}</Typography>
+          </Grid>
+          <Grid item xs={8}>
+            <Typography variant="h5">
+              <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}</Link>
+            </Typography>
+          </Grid>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <Grid item sm={3}></Grid>
+            <Grid item sm={2}>
+              <Typography align="center"><IconButton><BusinessCenterIcon color="action" /></IconButton>{company}</Typography>
+            </Grid>
+            <Grid item sm={2}>
+              <Typography align="center"><IconButton><LocationOnIcon color="action" /></IconButton>{location}</Typography>
+            </Grid>
+            <Grid item sm={2}>
+              <Typography align="center"><IconButton><TodayIcon color="action" /></IconButton>{new Date(created_at).toDateString()}</Typography>
+            </Grid>
+            <Grid item sm={3}></Grid>
+          </Grid>
+          <Grid container direction="row" spacing={2} justify="center">
+            <Grid item component={Card}>
+              <CardContent>
+                <Typography variant="h5" align="center">{public_repos}</Typography>
+                <Typography color="textSecondary">REPOSITORIES</Typography>
+              </CardContent>
+            </Grid>
+            <Grid item component={Card}>
+              <CardContent>
+                <Typography variant="h5" align="center">{followers}</Typography>
+                <Typography color="textSecondary">FOLLOWERS</Typography>
+              </CardContent>
+            </Grid>
+            <Grid item component={Card}>
+              <CardContent>
+                <Typography variant="h5" align="center">{following}</Typography>
+                <Typography color="textSecondary">FOLLOWING</Typography>
+              </CardContent>
+            </Grid>
+          </Grid>
+        </Grid >
       </Paper>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }
 
