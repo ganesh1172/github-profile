@@ -1,36 +1,37 @@
-import React from 'react';
-import { Card, CardContent, Typography, Grid } from '@material-ui/core';
-import styles from './Cards.module.css';
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, CardHeader } from '@material-ui/core';
 
-
-const Cards = ({ data: { public_repos, followers_url, following_url } }) => {
-    if (!public_repos) {
-        return '...Loading';
-    }
-    return (
-        <div className={styles.container}>
-            <Grid container spacing={3} justify="center">
-                <Grid item component={Card}>
-                    <CardContent>
-                        <Typography variant="h5">{public_repos}</Typography>
-                        <Typography color="textSecondary">REPOSITORIES</Typography>
-                    </CardContent>
-                </Grid>
-                <Grid item component={Card}>
-                    <CardContent>
-                        <Typography variant="h5">{followers_url}</Typography>
-                        <Typography color="textSecondary">FOLLOWERS</Typography>
-                    </CardContent>
-                </Grid>
-                <Grid item component={Card}>
-                    <CardContent>
-                        <Typography variant="h5">{following_url}</Typography>
-                        <Typography color="textSecondary">FOLLOWING</Typography>
-                    </CardContent>
-                </Grid>
-            </Grid>
-        </div >
-    )
+const Repos = ({ repos }) => {
+    const [topRepos, setTopRepos] = useState([]);
 }
 
-export default Cards;
+const getTopRepos = types => {
+    const LIMIT = 8;
+    const map = {
+        start: 'stargazers_count',
+        forks: 'forks_count',
+        size: 'size',
+    };
+    const sortProperty = map[type];
+    const sorted = repos
+        .filter(repo => !repo.fork)
+        .sort((a, b) => b[sortProperty] - a[sortProperty])
+        .slice(0, LIMIT);
+
+    setTopRepos(sorted);
+};
+return (
+
+
+    {
+        topRepos.length > 0 ? (
+            topRepos.map(repo => (
+                <Card>
+                    <CardHeader><Typography>{repo.id}</Typography>
+                        <Typography>{repo.html_url}</Typography></CardHeader>    </Card >))
+        )}
+
+
+)
+
+export default Repos;
