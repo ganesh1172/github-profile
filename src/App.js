@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from './api';
-import { Grid, Link, Typography, IconButton, Card, CardContent, Paper, AppBar, Toolbar, TextField, Switch, Tabs, Tab } from '@material-ui/core';
+import { Grid, Link, Typography, IconButton, Card, CardContent, Paper, AppBar, Toolbar, TextField, Switch, Button } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import cx from 'classnames';
 import TodayIcon from '@material-ui/icons/Today';
@@ -8,13 +8,20 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { makeStyles } from '@material-ui/styles';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
-import DescriptionIcon from '@material-ui/icons/Description';
-import GroupIcon from '@material-ui/icons/Group';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import FolderIcon from '@material-ui/icons/Folder';
 
 
 function App() {
+  // General
+  const [error, setError] = useState("");
+  const [darkMode, setDartmode] = useState(false);
+
+  const handleSearch = (e) => {
+    setUserInput(e.target.value);
+  };
+
+  // Profile
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -26,20 +33,8 @@ function App() {
   const [created_at, setCreated_at] = useState("");
   const [company, setCompany] = useState("");
   const [html_url, setHtml_url] = useState("");
-  const [error, setError] = useState("");
-  const [darkMode, setDartmode] = useState(false);
-  const [value, setValue] = useState(0);
-  const [repos, setRepos] = useState("");
 
-  // useEffect(() => {
-  //   axiosInstance.get(`/users/examples`)
-  //     .then(response => {
-  //       const data = response.data;
-  //       setData(data);
-  //     })
-  // }, []);
-
-  const setData = ({ name, login, public_repos, followers, following, avatar_url, location, created_at, company, html_url, repos }) => {
+  const setProfileData = ({ name, login, public_repos, followers, following, avatar_url, location, created_at, company, html_url }) => {
     setName(name);
     setUserName(login);
     setPublicRepos(public_repos);
@@ -50,19 +45,13 @@ function App() {
     setCreated_at(created_at);
     setCompany(company);
     setHtml_url(html_url);
-    setRepos(repos);
   };
 
-  const handleSearch = (e) => {
-    setUserInput(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const handleProfile = (e) => {
     axiosInstance.get(`/users/${userInput}`)
       .then(response => {
         const data = response.data;
-        setData(data);
-        console.log(data)
+        setProfileData(data);
         setError(null);
       })
       .catch(error => {
@@ -71,47 +60,38 @@ function App() {
     e.preventDefault();
   };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  // Repository
+  const [repoName, setRepoName] = useState([]);
+  const [repoLangauge, setRepoLangauge] = useState([]);
+
+  const setRepositoryData = (r_name, r_langauge) => {
+    setRepoName(r_name);
+    setRepoLangauge(r_langauge);
   };
 
-  const handleRepos = (e) => {
+  const handleRepository = (e) => {
     axiosInstance.get(`/users/${userInput}/repos`)
       .then(response => {
-        const data = response.data;
-        setData(data);
-        console.log(data);
+        const data = response.data
+        const r_name = []
+        const r_langauge = []
+        for (const i in data) {
+          r_name.push(data[i].name)
+          r_langauge.push(data[i].langauge)
+        }
+        console.log(r_name)
+        setRepositoryData(r_name, r_langauge);
       })
     e.preventDefault();
   }
 
-  const handleFollowers = (e) => {
-    axiosInstance.get(`/users/${userInput}/followers`)
-      .then(response => {
-        const data = response.data;
-        setData(data);
-        // console.log(data);
-      })
-    e.preventDefault();
-  }
-
-  const handleFollowing = (e) => {
-    axiosInstance.get(`/users/${userInput}/following`)
-      .then(response => {
-        const data = response.data;
-        setData(data);
-        // console.log(data);
-      })
-    e.preventDefault();
-  }
-
+  // CSS
   const useStyles = makeStyles((theme) => ({
     TypographyStyles: {
       flex: 1,
     },
-    size: {
-      minWidth: 495,
-      marginTop: 15,
+    button: {
+      marginTop: 5,
     }
   }));
 
@@ -121,6 +101,7 @@ function App() {
     },
   });
 
+  // HTML
   const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
@@ -129,9 +110,9 @@ function App() {
           <Toolbar>
             <Typography variant="h5" className={cx(classes.TypographyStyles)}>
               Git-Glimpse
-          </Typography>
+            </Typography>
             <div>
-              <form onSubmit={handleSubmit} autoComplete="off">
+              <form onSubmit={handleProfile} autoComplete="off">
                 <SearchTwoToneIcon />
                 <TextField
                   id="filled-size-small"
@@ -144,71 +125,81 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Grid item xs={8}>
-            <div>
-              <Avatar alt="profile" src={avatar_url} style={{ marginTop: '5' }} />
-            </div>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="h4" color="secondary">{name}ganesh</Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="h5">
-              <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}ganesh1172</Link>
-            </Typography>
-          </Grid>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Grid item sm={3}></Grid>
-            <Grid item sm={2}>
-              <Typography align="center"><IconButton><BusinessCenterIcon color="action" /></IconButton>ganesh{company}</Typography>
-            </Grid>
-            <Grid item sm={2}>
-              <Typography align="center"><IconButton><LocationOnIcon color="action" /></IconButton>navi mumbai{location}</Typography>
-            </Grid>
-            <Grid item sm={2}>
-              <Typography align="center"><IconButton><TodayIcon color="action" /></IconButton>8454866{new Date(created_at).toDateString()}</Typography>
-            </Grid>
-            <Grid item sm={3}></Grid>
-          </Grid>
-          <Grid container direction="row" justify="center">
-            <Grid item component={Card}>
-              <CardContent>
-                <Typography variant="h5" align="center">8{public_repos}</Typography>
-                <Typography color="textSecondary">REPOSITORIES</Typography>
-              </CardContent>
-            </Grid>
-            <Grid item component={Card}>
-              <CardContent>
-                <Typography variant="h5" align="center">8{followers}</Typography>
-                <Typography color="textSecondary">FOLLOWERS</Typography>
-              </CardContent>
-            </Grid>
-            <Grid item component={Card}>
-              <CardContent>
-                <Typography variant="h5" align="center">8{following}</Typography>
-                <Typography color="textSecondary">FOLLOWING</Typography>
-              </CardContent>
-            </Grid>
-          </Grid>
-          <Grid container direction="row">
-            <Grid item sm={3} />
-            <Grid item sm={6}>
-              <Tabs className={classes.size}
-                value={value}
-                onChange={handleChange}
-                variant="fullWidth"
-                indicatorColor="secondary"
-                textColor="primary"
-              >
-                <Tab icon={<DescriptionIcon />} label="Repositories" onClick={handleRepos} />{repos}
-                <Tab icon={<GroupIcon />} label="Followers" onClick={handleFollowers} />
-                <Tab icon={<GroupAddIcon />} label="following" onClick={handleFollowing} />
-              </Tabs>
-            </Grid>
-            <Grid item sm={3} />
-          </Grid>
-        </Grid >
+        {error ? (<div><h1>{error}</h1></div>) : (
+          <div>
+            {!userName ? (<h3>Welcome</h3>) : (
+              <div>
+                <Grid container direction="column" justify="center" alignItems="center">
+                  <Grid item xs={8}>
+                    <div>
+                      <Avatar alt="profile" src={avatar_url} style={{ marginTop: '5' }} />
+                    </div>
+                  </Grid>
+
+                  <Grid item xs={8}>
+                    <Typography variant="h4" color="secondary">{name}</Typography>
+                  </Grid>
+
+                  <Grid item xs={8}>
+                    <Typography variant="h5">
+                      <Link href={html_url} underline="hover" color="primary" target="_blank">@{userName}</Link>
+                    </Typography>
+                  </Grid>
+
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid item sm={3}></Grid>
+                    <Grid item sm={2}>
+                      <Typography align="center"><IconButton><BusinessCenterIcon color="action" /></IconButton>{company}</Typography>
+                    </Grid>
+                    <Grid item sm={2}>
+                      <Typography align="center"><IconButton><LocationOnIcon color="action" /></IconButton>{location}</Typography>
+                    </Grid>
+                    <Grid item sm={2}>
+                      <Typography align="center"><IconButton><TodayIcon color="action" /></IconButton>{new Date(created_at).toDateString()}</Typography>
+                    </Grid>
+                    <Grid item sm={3}></Grid>
+                  </Grid>
+
+                  <Grid container direction="row" justify="space-evenly">
+                    <Grid item component={Card}>
+                      <CardContent>
+                        <Typography variant="h5" align="center">{public_repos}</Typography>
+                        <Typography color="textSecondary">REPOSITORIES</Typography>
+                      </CardContent>
+                    </Grid>
+                    <Grid item component={Card}>
+                      <CardContent>
+                        <Typography variant="h5" align="center">{followers}</Typography>
+                        <Typography color="textSecondary">FOLLOWERS</Typography>
+                      </CardContent>
+                    </Grid>
+                    <Grid item component={Card}>
+                      <CardContent>
+                        <Typography variant="h5" align="center">{following}</Typography>
+                        <Typography color="textSecondary">FOLLOWING</Typography>
+                      </CardContent>
+                    </Grid>
+                  </Grid>
+
+                  <Button size="large" variant="contained" color="primary" className={classes.button} onClick={handleRepository} startIcon={<FolderIcon />}>
+                    Repos
+                  </Button>
+
+                  <Typography variant="h5" align="center">{repoName}</Typography>
+
+                  {/* <Grid container direction="row" justify="center">
+                    <Grid item component={Card}>
+                      <CardContent>
+                        <Typography variant="h5" align="center">{repoName}</Typography>
+                      </CardContent>
+                    </Grid>
+                  </Grid> */}
+
+                </Grid>
+              </div>
+            )}
+          </div>
+        )}
       </Paper>
     </ThemeProvider >
   );
