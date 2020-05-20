@@ -62,11 +62,13 @@ function App() {
 
   // Repository
   const [repoName, setRepoName] = useState([]);
-  const [repoLangauge, setRepoLangauge] = useState([]);
+  const [repoUrl, setRepoUrl] = useState([]);
+  const [repoSize, setRepoSize] = useState([]);
 
-  const setRepositoryData = (r_name, r_langauge) => {
+  const setRepositoryData = (r_name, r_htmlUrl, r_size) => {
     setRepoName(r_name);
-    setRepoLangauge(r_langauge);
+    setRepoUrl(r_htmlUrl);
+    setRepoSize(r_size);
   };
 
   const handleRepository = (e) => {
@@ -74,13 +76,15 @@ function App() {
       .then(response => {
         const data = response.data
         const r_name = []
-        const r_langauge = []
+        const r_htmlUrl = []
+        const r_size = []
         for (const i in data) {
           r_name.push(data[i].name)
-          r_langauge.push(data[i].langauge)
+          r_htmlUrl.push(data[i].html_url)
+          r_size.push(data[i].size)
         }
-        console.log(r_name)
-        setRepositoryData(r_name, r_langauge);
+        console.log(r_name, r_htmlUrl, r_size)
+        setRepositoryData(r_name, r_htmlUrl, r_size);
       })
     e.preventDefault();
   }
@@ -181,19 +185,18 @@ function App() {
                     </Grid>
                   </Grid>
 
-                  <Button size="large" variant="contained" color="primary" className={classes.button} onClick={handleRepository} startIcon={<FolderIcon />}>
+                  {/* <Button size="large" variant="contained" color="primary" className={classes.button} onClick={handleRepository} startIcon={<FolderIcon />}>
                     Repos
-                  </Button>
-
-                  <Typography variant="h5" align="center">{repoName}</Typography>
-
-                  {/* <Grid container direction="row" justify="center">
+                  </Button> */}
+                  <Grid container direction="row" justify="center">
                     <Grid item component={Card}>
                       <CardContent>
                         <Typography variant="h5" align="center">{repoName}</Typography>
+                        <Link><Typography variant="h5" align="center">{repoUrl}</Typography></Link>
+                        <Typography variant="h5" align="center">{repoSize}</Typography>
                       </CardContent>
                     </Grid>
-                  </Grid> */}
+                  </Grid>
 
                 </Grid>
               </div>
